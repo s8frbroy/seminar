@@ -75,13 +75,13 @@
 
   </head>
 
-  <body>
-</br>
+  <br>
+
 </br>
 </br>
     <!-- title  -->
     <div class="text">
-      <h1> Smart Home Pattern Prediction System </h1>
+      <h1> Smart Home Pattern Prediction System</h1>
     </div>
 </br>
 </br>
@@ -89,17 +89,33 @@
 
     <!-- canvas -->
     <div>
-      <h3>Upload File</h3>
+      <h3>Upload File Test</h3>
       <br>
         <form method='POST' enctype='multipart/form-data'>
           {{form.hidden_tag()}}
           {{form.file()}}
+            <br>
+           
+            <!-- drop down Menu datatype -->
+            <select name= datatype method="GET" action="/">
+            {% for datatype in datatype %}
+            <option value= "{{datatype}}" SELECTED>{{datatype}}</option>"
+            {% endfor %}
+            </select>
+            
+            <!-- drop down Menu model -->
+            <select name= model method="GET" action="/">
+            {% for model in model %}
+            <option value= "{{model}}" SELECTED>{{model}}</option>"
+            {% endfor %}
+            </select>
             <button type="submit"id="Upload" class="btn btn-primary">Upload! </button>
             <br>
         </form>
-      
+        
     
     </div>
+  </br>
 </br>
 </br>
 </br>
