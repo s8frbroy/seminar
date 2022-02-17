@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
@@ -23,11 +23,13 @@ def home():
     datatype = ['Multi', 'HouseA', 'HouseB']
     model = ['LSTM', 'CNN', 'SPEED']
     if form.validate_on_submit():
+        type_dat = request.form["datatype"]
+        model_chosen = request.form["model"]
         file = form.file.data  # First grab the file
         file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
                                secure_filename(file.filename)))  # Then save the file
         return "File has been uploaded."
-    return render_template('index.html', form=form, datatype=datatype, model = model)
+    return render_template('index.html', form=form, datatype=datatype, model = model, section = True)
 
 
 if __name__ == '__main__':

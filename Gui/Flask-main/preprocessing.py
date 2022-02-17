@@ -3,6 +3,11 @@ import pandas as pd
 import numpy as np
 import util
 
+def process_data(filename, type):
+    if type == "HouseA" or "HouseB":
+        return preprocessing_Aras(filename, type)
+    else:
+        return preprocess_multi(filename_float, filename_int)
 
 def preprocessing_Aras(filename, type):
 
