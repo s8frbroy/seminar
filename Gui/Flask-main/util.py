@@ -150,6 +150,7 @@ def remove_error_motion(test):
 
     ## reset index due to sampling
     test.reset_index(inplace=True)
+    test.head()
     t_5895.reset_index(inplace=True)
     t_5893.reset_index(inplace=True)
 
@@ -179,7 +180,7 @@ def load_multi_data(filename):
     :param type: "int" or "float"
     :return: dataframe
     '''
-    #root_path = '/content/gdrive/My Drive/Colab Notebooks/'
+
 
     ## sensor_ids to keep
     ids = [5895,7125,5896,6253,5887,5888,5889,5893,6632,6633,6635,6896]
@@ -330,7 +331,7 @@ def convert_to_multi(data, type):
     if type == "HouseA":
         return convert_to_multi_sensor_H_A(data)
     else:
-        return convert_to_multi_sensor_H_B
+        return convert_to_multi_sensor_H_B(data)
 
 def convert_to_multi_sensor_H_A(df):
     '''
@@ -410,9 +411,7 @@ def convert_to_multi_sensor_H_A(df):
         else:
             print(f"Missing: {sen}")
 
-    print(len(sensor_id))
-    print(len(value))
-    print(len(time))
+
     dt = {'sensor_id' : sensor_id, 'value' : value, "time" : time, "old_sen" : old}
     data = pd.DataFrame(data = dt)
 
@@ -498,9 +497,7 @@ def convert_to_multi_sensor_H_B(df):
             print(sen)
             print (i)
             raise ValueError
-    print(len(sensor_id))
-    print(len(value))
-    print(len(time))
+
     dt = {'sensor_id' : sensor_id, 'value' : value, "time" : time, "old_sen" : old}
     data = pd.DataFrame(data = dt)
 
