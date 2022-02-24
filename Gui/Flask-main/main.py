@@ -1,11 +1,15 @@
-from flask import Flask, render_template, request
+from select import select
+from flask import Flask, render_template, request, flash
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 import os
+import tensorflow as tf
 from wtforms.validators import InputRequired
 from wtforms import MultipleFileField
 import preprocessing
+import predict
+import pandas as pd
 
 # create Flask app
 datatype = ""
@@ -13,17 +17,21 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
+
+
+
 ## Upload Form
 class UploadFileForm(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Upload File")
 
 class Submit(FlaskForm):
-    button = SubmitField("preprocess")
+    submit = SubmitField("Predict")
+
 
 
 @app.route('/', methods=['GET', "POST"])
-@app.route('/home', methods=['GET', "POST"])
+#@app.route('/home', methods=['GET', "POST"])
 def home():
     form = UploadFileForm()
     datatype = ['Multi Int', 'Multi Float', 'HouseA', 'HouseB']
@@ -53,23 +61,63 @@ def home():
                                 "Multi_float.csv"))  # Then save the file
             type = "Multi"
 
-        print("up")
-        return f"File has been uploaded data of {type_dat}"
+       
+        #return f"File has been uploaded data of {type_dat}"
     preprocess()
        
     return render_template('index.html', form=form, datatype=datatype, model = model, section = True)
 
 
-def preprocess():
-    
-    if request.form.get('Preprocessing') == 'Preprocessing':
-        print(type(type))
-        return f"preprocess..."
-    if type == "Aras":
-        df = preprocessing.process_data_Aras("static/files/Aras.txt",type)
+@app.route("/predict")
+def pred():
+    print("",type)
+    print("",model_type)
+    return render_template('predict.html')
+
+def select_dataset(type):
+    if type == "HouseA":
+            df = preprocessing.process_data_Aras("static/files/Aras.txt",type)
+            print("",type)
+            print("",model_type)
+    elif type == "HouseB":
+            df = preprocessing.process_data_Aras("static/files/Aras.txt",type)
+            print("",type)
+            print("",model_type)
     else:
-        df = preprocessing.preprocess_multi("static/file/Multi_float.csv", "static/file/Multi_int.csv")
+            
+            df = preprocessing.preprocess_multi("static/files/Multi_float.csv", "static/files/Multi_int.csv")
+            print("",type)
+            print("",model_type)
     
+    return df
+    
+@app.route('/predict', methods=['GET', "POST"])
+def preprocess():
+    if request.form.get('Predict') == 'Predict':
+        
+        df = select_dataset(type)
+
+        if model_type == "SPEED":
+            pass
+
+        else :
+            X = predict.preprocessing_2(df)
+
+            if model_type == "CNN":
+                print(X)
+                model_cnn = predict.init_model_cnn()
+                print(model_cnn)
+                out = predict.predict(model_cnn,X)
+                print(out)
+                
+
+            else:
+                model_lstm = predict.init_model_lstm()
+                out = predict.predict(model_lstm,X)
+         
+
+
+    return f"preprocess..."
 
 
 if __name__ == '__main__':

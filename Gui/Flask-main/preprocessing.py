@@ -19,7 +19,7 @@ def preprocessing_Aras(filename, type):
     return data
 
 def preprocess_multi(filename_float, filename_int):
-    
+
     ## load int and float data
     multi_float = util.load_multi_data(filename_float)
     multi_int   = util.load_multi_data(filename_int)
