@@ -1,1 +1,0 @@
-datatype = ['Multi', 'HouseA', 'HouseB']
