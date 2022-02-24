@@ -10,6 +10,7 @@ from wtforms import MultipleFileField
 import preprocessing
 import predict
 import pandas as pd
+import numpy as np
 
 # create Flask app
 datatype = ""
@@ -108,12 +109,27 @@ def preprocess():
                 print(model_cnn)
                 out = predict.predict(model_cnn,X)
                 print(out)
-                
+                y_pred_sensor= []
+                y_pred_prob= []
+                for i in range(0,len(out)): 
+                    y_pred_sensor.append(np.argmax(out[i]))
+                    y_pred_prob.append(np.max(out[i]))
+                dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
+                df = pd.DataFrame(data = dic)
+                df.to_csv('static/files/Output.csv') 
 
             else:
                 model_lstm = predict.init_model_lstm()
                 out = predict.predict(model_lstm,X)
-         
+                print(out)
+                y_pred_sensor= []
+                y_pred_prob= []
+                for i in range(0,len(out)): 
+                    y_pred_sensor.append(np.argmax(out[i]))
+                    y_pred_prob.append(np.max(out[i]))
+                dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
+                df = pd.DataFrame(data = dic)
+                df.to_csv('static/files/Output.csv')
 
 
     return f"preprocess..."
