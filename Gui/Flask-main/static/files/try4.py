@@ -30,7 +30,7 @@ colors = {
 }
 
 
-#df = pd.read_csv("cat5.csv")
+df = pd.read_csv("output.csv")
 
 app.layout = html.Div([
         
@@ -272,7 +272,7 @@ app.layout = html.Div([
                 
                 
                 
-                dcc.Tab(label='Multi Sensor Data', children=[
+                dcc.Tab(label='Sensor Data Analysis', children=[
                         
                         html.H1('Data Analysis'),
                         
@@ -312,7 +312,7 @@ app.layout = html.Div([
                 
                 
         dcc.Tab(label='Select Multiple Days', children=[
-            html.H1('MultiSensor Data Analysis'),
+            html.H1('Sensor Data Analysis'),
                      
                           
                          dcc.DatePickerSingle(

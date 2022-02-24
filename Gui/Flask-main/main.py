@@ -1,5 +1,5 @@
 from select import select
-from flask import Flask, render_template, request, flash
+from flask import Flask, render_template, request, flash, redirect, url_for, Response
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
@@ -7,10 +7,16 @@ import os
 import tensorflow as tf
 from wtforms.validators import InputRequired
 from wtforms import MultipleFileField
+import matplotlib as plt
+from matplotlib.figure import Figure
 import preprocessing
 import predict
 import pandas as pd
 import numpy as np
+import random
+import io
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 
 # create Flask app
 datatype = ""
@@ -130,10 +136,30 @@ def preprocess():
                 dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
                 df = pd.DataFrame(data = dic)
                 df.to_csv('static/files/Output.csv')
+                data = pd.DataFrame(X)
+                 
+    return redirect(url_for('vis'))#,data=data , df = df)
 
+@app.route("/vis")
+# def vis():
+#     print("",type)
+#     print("",model_type)
+#     return render_template('vis.html')
 
-    return f"preprocess..."
-
+def vis():
+    fig = create_figure()
+    output = io.BytesIO()
+    img = FigureCanvas(fig).print_png(output)
+    file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
+                                "Multi_int.csv"))  # Then save the file
+    return render_template('vis.html')
+def create_figure():
+    fig = Figure()
+    axis = fig.add_subplot(1, 1, 1)
+    xs = range(100)
+    ys = [random.randint(1, 50) for x in xs]
+    axis.plot(xs, ys)
+    return fig
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True
