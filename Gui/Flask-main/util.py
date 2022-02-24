@@ -438,6 +438,7 @@ def one_hot_encoding(df):
           '18' : enc[18], '19': enc[19], '20' : enc[20], '21': enc[21], '22': enc[22], '23': enc[23]
           }
     data = pd.DataFrame(data = dt)
+    print(data.shape)
     return data
 
 

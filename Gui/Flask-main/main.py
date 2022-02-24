@@ -84,7 +84,6 @@ def select_dataset(type):
             print("",type)
             print("",model_type)
     else:
-            
             df = preprocessing.preprocess_multi("static/files/Multi_float.csv", "static/files/Multi_int.csv")
             print("",type)
             print("",model_type)

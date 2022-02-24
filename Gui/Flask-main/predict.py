@@ -31,9 +31,10 @@ def preprocessing_2(df):
 
     global X_test
     global y_test
-    dummies2 = pd.get_dummies(df.event)
-    df2 = pd.concat([df,dummies2], axis ='columns')
-    df2.drop(['event'],axis=1,inplace=True)
+    df2 = util.one_hot_encoding(df)
+    # dummies2 = pd.get_dummies(df.event)
+    # df2 = pd.concat([df,dummies2], axis ='columns')
+    #df2.drop(['event'],axis=1,inplace=True)
     X_test =[]
     y_test =[]
     test_data = df2.values
