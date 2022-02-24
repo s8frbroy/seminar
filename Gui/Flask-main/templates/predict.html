@@ -77,52 +77,29 @@
 
   </head>
   <div id="" style="overflow:scroll;">
-  <br>
 
-</br>
 </br>
     <!-- title  -->
     <div class="text">
       <h1> Smart Home Pattern Prediction System</h1>
     </div>
 </br>
-</br>
-</br>
+
 
     <!-- canvas -->
     <div>
-      <h3>Upload File Test</h3>
+      <h3>Predict</h3>
       <br>
         <form method='POST' enctype='multipart/form-data'>
-          {{form.hidden_tag()}}
-          {{form.file()}}
-            <br>
-           
-            <!-- drop down Menu datatype -->
-            <select name= datatype method="GET" action="/">
-            {% for datatype in datatype %}
-            <option value= "{{datatype}}" SELECTED>{{datatype}}</option>"
-            {% endfor %}
-            </select>
-            
-            <!-- drop down Menu model -->
-            <select name= model method="GET" action="/">
-            {% for model in model %}
-            <option value= "{{model}}" SELECTED>{{model}}</option>"
-            {% endfor %}
-            </select>
-            <button type="submit"id="Upload" class="btn btn-primary">Upload! </button>
-            <br>
+          <button class="btn btn-primary">
+    <input type="submit" name="Predict" value="Predict">
+    </button>
         </form>
-        <br>
-        <br>
-               
-       <button type="submit"id="Next" class="btn btn-primary"> <a href="/predict", style="color:white">Next -> </a></button>
+
     </div>
   </br>
 </br>
-</br>
-</br>
+
     <!-- buttons and output -->
     
       <h1 id="result"><span>Sensors</span></h1>
@@ -241,9 +218,7 @@
 
     </div>
     <br>
-    <button class="btn btn-primary">
-    <input type="submit" name="Predict" value="Predict">
-    </button>
+    
     <br> 
     <br>
     <br>
