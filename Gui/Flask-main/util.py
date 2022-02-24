@@ -417,6 +417,30 @@ def convert_to_multi_sensor_H_A(df):
 
     return data
 
+def one_hot_encoding(df):
+
+    df = df.reset_index(drop = True)
+    ## initialize 24 * n_datapoints array
+    len = df.shape[0]
+    n_event = 24
+    enc = [[0 for i in range(len)] for j in range(n_event)]
+    enc = np.array(enc)
+
+    ## fill array
+    for i in range(0, df.shape[0]):
+
+        sen = df.loc[i, "event"]
+        enc[sen, i] = 1
+
+    dt = {"time_scal" :df["time_scal"],'0' : enc[0], '1': enc[1], '2' : enc[2], '3': enc[3], '4': enc[4], '5': enc[5],
+          '6' : enc[6], '7': enc[7], '8' : enc[8], '9': enc[9], '10': enc[10], '11': enc[11],
+          '12' : enc[12], '13': enc[13], '14' : enc[14], '15': enc[15], '16': enc[16], '17': enc[17],
+          '18' : enc[18], '19': enc[19], '20' : enc[20], '21': enc[21], '22': enc[22], '23': enc[23]
+          }
+    data = pd.DataFrame(data = dt)
+    return data
+
+
 def convert_to_multi_sensor_H_B(df):
     '''
     :goal: transform Aras HouseB data into Multi sensor like form
