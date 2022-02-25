@@ -102,7 +102,7 @@ def select_dataset(type):
     
     return df
     
-@app.route('/predict', methods=['GET', "POST"], endpoint='graph')
+@app.route('/predict', methods=['GET', "POST"])
 def preprocess():
     if request.form.get('Predict') == 'Predict':
         
@@ -143,14 +143,17 @@ def preprocess():
                 df.to_csv('static/files/Output.csv')
                 data = pd.DataFrame(X)
                  
-        return redirect(url_for('graph.html'))
+        return redirect(url_for("graph"))
     
 
 
 @app.route("/graph", methods=['GET', 'POST'])
-def chart():
+def graph():
+    eps = 20 
+    if model_type == "SPEED":
+        eps = 5
     counter = 0
-    border = counter + 20
+    border = counter + eps
     data = pd.read_csv("static/files/data.csv")
     prediction = pd.read_csv("static/files/Output.csv")
     add = prediction.iloc[counter]
@@ -158,21 +161,39 @@ def chart():
     events = events.tolist()
     events.append(add.loc["sen"])
     print(events)
-    label = [str(x) for x in range(1,21)]
+    label = [str(x) for x in range(1,eps+1)]
     label.append("Pred")
 
     if request.method == 'POST':
+        print("hi")
         if request.form.get('action1') == 'Backward':
             if counter == 0:
+                print("predict")
                 return render_template('predict.html')
             else:
+                print("hello")
                 counter += -1
-                return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
 
             
         if  request.form.get('action2') == 'Forward':
             counter += 1
-            return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
+
+    if request.method == 'POST':
+        if request.form.get('action1') == 'Backward':
+            if counter == 0:
+                print("predict")
+                return render_template('predict.html')
+            else:
+                print("hello")
+                counter += -1
+                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
+
+            
+        if  request.form.get('action2') == 'Forward':
+            counter += 1
+            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
 
     labels = label
 
