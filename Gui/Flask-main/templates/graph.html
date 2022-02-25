@@ -66,8 +66,14 @@
       </script>
     </center>
     <br></br>
+
     <center>
-    <form method="post" action="/">
+      <p>Confidence: {{ prob }}</p>
+    </center>
+
+    <br></br>
+    <center>
+    <form method="post" action="/graph">
       <input type="submit" value="Backward" name="action1"/>
       <input type="submit" value="Forward" name="action2" />
     </form>

@@ -26,10 +26,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
-
-global counter
 counter = 0
-
 
 ## Upload Form
 class UploadFileForm(FlaskForm):
@@ -149,23 +146,30 @@ def preprocess():
 
 @app.route("/graph", methods=['GET', 'POST'])
 def graph():
+
+    global counter
     eps = 20 
     if model_type == "SPEED":
         eps = 5
-    counter = 0
     border = counter + eps
     data = pd.read_csv("static/files/data.csv")
     prediction = pd.read_csv("static/files/Output.csv")
+    ## Prediction
     add = prediction.iloc[counter]
-    events = data.loc[counter:border, "event"]
+    prob = add.loc["prob"]
+    ## values for the plot
+    print(add.loc["sen"])
+    events = data.loc[counter:border-1, "event"]
+    print(len(events))
     events = events.tolist()
     events.append(add.loc["sen"])
+    print(len(events))
     print(events)
     label = [str(x) for x in range(1,eps+1)]
     label.append("Pred")
 
     if request.method == 'POST':
-        print("hi")
+    
         if request.form.get('action1') == 'Backward':
             if counter == 0:
                 print("predict")
@@ -173,27 +177,14 @@ def graph():
             else:
                 print("hello")
                 counter += -1
-                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
+                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100)
 
             
         if  request.form.get('action2') == 'Forward':
             counter += 1
-            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
+            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100)
 
-    if request.method == 'POST':
-        if request.form.get('action1') == 'Backward':
-            if counter == 0:
-                print("predict")
-                return render_template('predict.html')
-            else:
-                print("hello")
-                counter += -1
-                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
 
-            
-        if  request.form.get('action2') == 'Forward':
-            counter += 1
-            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events)
 
     labels = label
 
