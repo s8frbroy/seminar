@@ -28,6 +28,7 @@ def preprocessing_2(df):
     df = util.add_event_col(df, dic)
     df["time_scal"] = df["time"]/ 86400
     df = df[["event", "time_scal"]]
+    df.to_csv("static/files/data.csv")
 
     global X_test
     global y_test

@@ -1,5 +1,7 @@
+from operator import index
 from select import select
 from flask import Flask, render_template, request, flash, redirect, url_for, Response
+from prometheus_client import Counter
 from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
@@ -7,7 +9,7 @@ import os
 import tensorflow as tf
 from wtforms.validators import InputRequired
 from wtforms import MultipleFileField
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 import preprocessing
 import predict
@@ -25,6 +27,8 @@ app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['UPLOAD_FOLDER'] = 'static/files'
 
 
+global counter
+counter = 0
 
 
 ## Upload Form
@@ -67,6 +71,7 @@ def home():
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
                                 "Multi_float.csv"))  # Then save the file
             type = "Multi"
+        
 
        
         #return f"File has been uploaded data of {type_dat}"
@@ -97,7 +102,7 @@ def select_dataset(type):
     
     return df
     
-@app.route('/predict', methods=['GET', "POST"])
+@app.route('/predict', methods=['GET', "POST"], endpoint='graph')
 def preprocess():
     if request.form.get('Predict') == 'Predict':
         
@@ -138,21 +143,46 @@ def preprocess():
                 df.to_csv('static/files/Output.csv')
                 data = pd.DataFrame(X)
                  
-    return redirect(url_for('vis'))#,data=data , df = df)
+        return redirect(url_for('graph.html'))
+    
 
-@app.route("/vis")
-# def vis():
-#     print("",type)
-#     print("",model_type)
-#     return render_template('vis.html')
 
-def vis():
-    fig = create_figure()
-    output = io.BytesIO()
-    img = FigureCanvas(fig).print_png(output)
-    file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                "Multi_int.csv"))  # Then save the file
-    return render_template('vis.html')
+@app.route("/graph", methods=['GET', 'POST'])
+def chart():
+    counter = 0
+    border = counter + 20
+    data = pd.read_csv("static/files/data.csv")
+    prediction = pd.read_csv("static/files/Output.csv")
+    add = prediction.iloc[counter]
+    events = data.loc[counter:border, "event"]
+    events = events.tolist()
+    events.append(add.loc["sen"])
+    print(events)
+    label = [str(x) for x in range(1,21)]
+    label.append("Pred")
+
+    if request.method == 'POST':
+        if request.form.get('action1') == 'Backward':
+            if counter == 0:
+                return render_template('predict.html')
+            else:
+                counter += -1
+                return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+
+            
+        if  request.form.get('action2') == 'Forward':
+            counter += 1
+            return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+
+    labels = label
+
+    values = events
+    
+    return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+
+
+
+
 def create_figure():
     fig = Figure()
     axis = fig.add_subplot(1, 1, 1)
