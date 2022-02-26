@@ -105,8 +105,11 @@ def preprocess():
         
         df = select_dataset(type)
 
-        if model_type == "SPEED":
-            pass
+        if model_type == "SPEED":                
+             model_speed = predict.init_model_speed(type)
+             # TODO: assign sequence given as context for prediction
+             input_seq = ""     # sequence to check, len=5
+             prediction, out_prob = predict.speed_predict(model[0], input_seq, model[1])
 
         else :
             X = predict.preprocessing_2(df)
