@@ -143,7 +143,6 @@ def preprocess():
                 dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
                 df = pd.DataFrame(data = dic)
                 df.to_csv('static/files/Output.csv')
-                data = pd.DataFrame(X)
                  
         return redirect(url_for("graph"))
     
