@@ -106,11 +106,25 @@ def preprocess():
         df = select_dataset(type)
         print(df.head())
 
-        if model_type == "SPEED":                
+        if model_type == "SPEED":               
              model_speed = predict.init_model_speed(type)
-             # TODO: assign sequence given as context for prediction
-             input_seq = ""     # sequence to check, len=5
-             prediction, out_prob = predict.speed_predict(model[0], input_seq, model[1])
+             
+             X, all_seq = predict.preprocessing_speed(df)
+             X.to_csv('static/files/data.csv')
+             
+             ws = 5
+             
+             output = []
+             
+             for id, event in enumerate(X):
+                if id < len(X)-5:
+                    input_seq = X[id:id+ws]
+                    prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
+                    
+                    output.append(prediction_with_prob)
+                    
+            out_df = pd.DataFrame (output, columns = ['sen', 'prob'])
+            out_df.to_csv('static/files/Output.csv')
 
         else :
 

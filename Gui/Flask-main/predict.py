@@ -62,6 +62,56 @@ def preprocessing_2(df):
 
 #choose model
 
+
+# Processing for SPEED
+def preprocessing_speed(df_raw):
+    dic_on_off = create_on_off_Multi_char()
+
+    df_clean = df_raw
+    df = add_event_col(df_clean, dic_on_off)
+  
+    new_df = df[["time", "event"]]
+    processed_data = new_df
+    
+    processed_list = processed_data.values.tolist()
+    
+    sequence_list = ""
+    for item in processed_list:
+        sequence_list += item[1]
+
+    return processed_data, sequence_list
+
+def add_event_col(df, dic):
+
+    add = []
+
+    for index, row in df.iterrows():
+
+        sensor = row["sensor_id"]
+        value = int(row["value"])
+
+        add.append(dic[sensor][value])
+
+    df["event"] = np.array(add)
+    return df
+
+def create_on_off_Multi_char():
+    dic_on_off = {}
+    dic_on_off[5895] = ["a","A"]
+    dic_on_off[7125] = ["b", "B"]
+    dic_on_off[5896] = ["c", "C"]
+    dic_on_off[6253] = ["d", "D"]
+    dic_on_off[6632] = ["e", "E"]
+    dic_on_off[6633] = ["f", "F"]
+    dic_on_off[6635] = ["g", "G"]
+    dic_on_off[6896] = ["h", "H"]
+    dic_on_off[5887] = ["i", "I"]
+    dic_on_off[5888] = ["j", "J"]
+    dic_on_off[5889] = ["k", "K"]
+    dic_on_off[5893] = ["l", "L"]
+    return dic_on_off
+    
+
 # make a prediction based on image
 def predict(model,dataX):
     prediction = model.predict(dataX)
@@ -146,9 +196,9 @@ def speed_predict_from_tree(the_tree, check_seq, count_of_all_nodes):
         target = act
         if target in count_of_all_nodes.keys():
           the_prob = prob_of_target(check_seq, target, the_tree, total_count_of_nodes, count_of_all_nodes)
-          predict_prob.append((act, the_prob))
+          predict_prob.append([act, the_prob])
         else:
-          predict_prob.append((act, 0))
+          predict_prob.append([act, 0])
 
     prediction = max(predict_prob, key=lambda x:x[1])
     return prediction, predict_prob
