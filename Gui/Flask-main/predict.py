@@ -185,6 +185,19 @@ def count_nodes(node_dict, node):
             node_dict[node] = 1
     return node_dict
     
+def tree_search(tree, parent_seq, node_char, node_count):
+    check_layer = tree
+    for char in parent_seq:
+        for item in check_layer:
+            if type(item) == list and item[0] == char:
+                if type(item[-1]) == list:
+                #print("append to: ", item, "check layer: ", check_layer, "TRIGGERED HERE**")   # next layer would be deeper in the tree
+                    check_layer = check_layer[-1]
+                else:
+                #print("append to: ", item, "check layer: ", check_layer, "TRIGGERED HERE")     # next layer would be the most shallow subtree layer
+                item.append([node_char, node_count])
+  return tree
+    
 def speed_predict(model, input, count_of_all_nodes):
     stat_tree = model
     output = speed_predict_from_tree(model, input, count_of_all_nodes)
