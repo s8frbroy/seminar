@@ -125,8 +125,13 @@ def preprocess():
                     print(input_seq)
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
                     prediction_with_prob = get_num_from_alphabet(prediction_with_prob[0]), prediction_with_prob[1]
+                    p = prediction_with_prob[1]
+                    maximum = max(p, key=lambda x: x[1])
+                    maximum[0] = get_num_from_alphabet(maximum[0])
+                    print(f"max: {maximum}")
+                    print(f"prediction_with_prob: {prediction_with_prob}")
 
-                    output.append(prediction_with_prob)
+                    output.append(maximum)
 
             out_df = pd.DataFrame(output, columns=['sen', 'prob'])
             out_df.to_csv('static/files/Output.csv')
@@ -214,6 +219,8 @@ def graph():
 
     return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values, prob=prob * 100,
                            original=original_sen)
+
+
 
 
 def get_original(sensor):
