@@ -10,4 +10,6 @@ OVERVIEW:
 * main:      run this file in the console of your choice
 * predict:   used for prediction needed in main file
 * util:	     helper file (most functions are used for preprocessing)
+* requirements: for required libraries
+* json        : json files store trees for Speed algo
 
