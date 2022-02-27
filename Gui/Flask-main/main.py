@@ -107,7 +107,7 @@ def preprocess():
         print(df.head())
 
         if model_type == "SPEED":               
-            model_speed = predict.init_model_speed(type)
+            model = predict.init_model_speed(type)
              
             X, all_seq = predict.preprocessing_speed(df)
             X.to_csv('static/files/data.csv')

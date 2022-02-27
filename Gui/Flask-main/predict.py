@@ -3,6 +3,7 @@ import tensorflow as tf
 import os
 import sys
 import base64
+import json
 
 from main import *
 from preprocessing import *
@@ -121,7 +122,7 @@ def predict(model,dataX):
     
 # processing for SPEED
 def build_tree(dict_tree_filename, dataset):
-    dict_tree = create_dict_for_tree(episode_list, dict_tree)
+    #dict_tree = create_dict_for_tree(episode_list, dict_tree)
     
     with open(dict_tree_filename) as handle:
         dict_tree = json.loads(handle.read())
@@ -173,6 +174,10 @@ def build(dict_tree, dataset):
     return the_tree, count_of_all_nodes
 
 def count_nodes(node_dict, node):
+    caps = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]   # turning on
+    lows = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"]   # turning off
+
+    all_actions = caps + lows
     if node in caps or node in lows:
         if node in node_dict:
             node_dict[node] += 1
