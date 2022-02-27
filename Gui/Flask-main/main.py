@@ -128,8 +128,6 @@ def preprocess():
                     p = prediction_with_prob[1]
                     maximum = max(p, key=lambda x: x[1])
                     maximum[0] = get_num_from_alphabet(maximum[0])
-                    print(f"max: {maximum}")
-                    print(f"prediction_with_prob: {prediction_with_prob}")
 
                     output.append(maximum)
 
@@ -173,23 +171,31 @@ def preprocess():
 
 @app.route("/graph", methods=['GET', 'POST'])
 def graph():
+
     global counter
     eps = 20
     if model_type == "SPEED":
         eps = 5
     border = counter + eps
+
     data = pd.read_csv("static/files/data.csv")
     prediction = pd.read_csv("static/files/Output.csv")
     ## Prediction
     add = prediction.iloc[counter]
     prob = add.loc["prob"]
     pred_sensor = add.loc["sen"]
-    original = original_sen = get_original(pred_sensor)
+
+    original_sen = get_original(pred_sensor)
     ## values for the plot
+
     print(add.loc["sen"])
     events = data.loc[counter:border - 1, "event"]
+    
     print(len(events))
     events = events.tolist()
+    if model_type == "SPEED":
+        for i in events:
+            events[i] = get_num_from_alphabet(events[i])
     events.append(add.loc["sen"])
     print(len(events))
     print(events)
