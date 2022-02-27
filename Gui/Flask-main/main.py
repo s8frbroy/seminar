@@ -204,6 +204,8 @@ def graph():
         for i in range(len(events)):
             print(f"{events[i]}")
             events[i] = get_num_from_alphabet(events[i])
+    if prob> 1:
+        prob = 0
 
     events.append(add.loc["sen"])
     print(len(events))
