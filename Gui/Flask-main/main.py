@@ -160,6 +160,8 @@ def graph():
     ## Prediction
     add = prediction.iloc[counter]
     prob = add.loc["prob"]
+    pred_sensor = add.loc["sen"]
+    original = original_sen = get_original(pred_sensor)
     ## values for the plot
     print(add.loc["sen"])
     events = data.loc[counter:border-1, "event"]
@@ -180,12 +182,12 @@ def graph():
             else:
                 print("hello")
                 counter += -1
-                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100)
+                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100, original = original_sen )
 
             
         if  request.form.get('action2') == 'Forward':
             counter += 1
-            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100)
+            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100, original = original_sen)
 
 
 
@@ -193,18 +195,71 @@ def graph():
 
     values = events
     
-    return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values)
+    return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values, prob=prob*100, original = original_sen)
+
+def get_original(sensor):
+    if sensor == 0 or sensor == "a":
+        return "bathroom ambience off"
+    elif sensor == 1 or sensor == "A":
+        return "bathroom ambience on"
+
+    elif sensor == 2 or sensor == "b":
+        return "bathroom light off"
+    elif sensor == 3 or sensor == "B":
+        return "bathroom light on"
+
+    elif sensor == 4 or sensor == "c":
+        return "bedroom pressure off"
+    elif sensor == 5 or sensor == "C":
+        return "bedroom pressure on"
+
+    elif sensor == 6 or sensor == "d":
+        return "fridge off"
+    elif sensor == 7 or sensor == "D":
+        return "fridge on"
+
+    elif sensor == 8 or sensor == "e":
+        return "coffeemaker off"
+    elif sensor == 9 or sensor == "E":
+        return "coffeemaker on"
+
+    elif sensor == 10 or sensor == "f":
+        return "sandwhich maker off"
+    elif sensor == 11 or sensor == "F":
+        return "sandwhich maker on"
+
+    elif sensor == 12 or sensor == "g":
+        return "kettle off"
+    elif sensor == 13 or sensor == "G":
+        return "kettle on"
+
+    elif sensor == 14 or sensor == "h":
+        return "microwave off"
+    elif sensor == 15 or sensor == "H":
+        return "microwave off"
+
+    elif sensor == 16 or sensor == "i":
+        return "stove off"
+    elif sensor == 17 or sensor == "I":
+        return "stove on"
+
+    elif sensor == 18 or sensor == "j":
+        return "entrance door off"
+    elif sensor == 19 or sensor == "J":
+        return "entrance door off"
 
 
+    elif sensor == 20 or sensor == "k":
+        return "couch pressure off"
+    elif sensor == 21 or sensor == "K":
+        return "couch pressure on"
 
+    elif sensor == 22 or sensor == "l":
+        return "kitchen motin off"
+    elif sensor == 23 or sensor == "L":
+        return "kitchen motion on"
+    
 
-def create_figure():
-    fig = Figure()
-    axis = fig.add_subplot(1, 1, 1)
-    xs = range(100)
-    ys = [random.randint(1, 50) for x in xs]
-    axis.plot(xs, ys)
-    return fig
 
 if __name__ == '__main__':
     app.config['TEMPLATES_AUTO_RELOAD'] = True

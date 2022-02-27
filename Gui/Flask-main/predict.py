@@ -22,7 +22,8 @@ def init_model_lstm():
     print("loaded model successfully")
     return loaded_model
     
- def init_model_speed(dataset):
+def init_model_speed(dataset):
+
     # loads statistics for each dataset from a dictionay, and builds the nested list as tree
     if dataset == "HouseA":
         dict_tree_filename = "ARAS_House_A_dict.json"
@@ -190,4 +191,4 @@ def stored_for_prob(target_count_in_term_node, check_seq, target, the_tree):
                     store_for_prob, target_count_in_term_node = get_store_list(target_count_in_term_node, check_seq, target, the_tree, check_subseq, sub_item, store_for_prob, counter)
                     check_subseq = check_subseq[1:]
                 counter -= 1
-  return(store_for_prob, target_count_in_term_node, root_subtree)
+    return (store_for_prob, target_count_in_term_node, root_subtree)

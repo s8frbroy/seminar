@@ -44,11 +44,25 @@
                 {{ item }},
               {% endfor %}]
             }
-      ]
+        ],
+
+        options: {
+          scales: {
+              y: {
+                  ticks: {
+                      // Include a dollar sign in the ticks
+                      callback: function(value, index, ticks) {
+                          return '$' + value;
+                      }
+                  }
+              }
+          }
+      }
+      
         }
   
         Chart.defaults.global.animationSteps = 50;
-        Chart.defaults.global.tooltipYPadding = 16;
+        Chart.defaults.global.tooltipYPadding = 40;
         Chart.defaults.global.tooltipCornerRadius = 0;
         Chart.defaults.global.tooltipTitleFontStyle = "normal";
         Chart.defaults.global.tooltipFillColor = "rgba(0,0,0,0.8)";
@@ -60,7 +74,7 @@
         // get bar chart canvas
         var mychart = document.getElementById("chart").getContext("2d");
   
-        steps = 10
+        steps = 12
         max = {{ max }}
         // draw bar chart
         var LineChartDemo = new Chart(mychart).Line(barData, {
@@ -73,14 +87,16 @@
           barShowStroke : true,
           scaleShowLabels: true,
           bezierCurve: false,
+          
         });
+        chart.yAxis().title("Sensors")
   
       </script>
     </center>
     <br></br>
 
     <center>
-      <p>Confidence: {{ prob }}</p>
+      <p>Confidence of sensor {{original}} : {{ prob }}</p>
     </center>
 
     <br></br>
