@@ -119,9 +119,6 @@ def preprocess():
             print(f"len X: {len(X)}")
 
             for id in range(len(X)):
-                print(f"id: {id}")
-                
-                print(f"statement: {id}")
 
                 if id < len(X) - 5:
                     Y = X[id: (id + ws)]
@@ -205,7 +202,7 @@ def graph():
             print(f"{events[i]}")
             events[i] = get_num_from_alphabet(events[i])
     if prob> 1:
-        prob = 0
+        prob = 0.0001
 
     events.append(add.loc["sen"])
     print(len(events))
