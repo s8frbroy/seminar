@@ -107,16 +107,16 @@ def preprocess():
         print(df.head())
 
         if model_type == "SPEED":               
-             model_speed = predict.init_model_speed(type)
+            model_speed = predict.init_model_speed(type)
              
-             X, all_seq = predict.preprocessing_speed(df)
-             X.to_csv('static/files/data.csv')
+            X, all_seq = predict.preprocessing_speed(df)
+            X.to_csv('static/files/data.csv')
              
-             ws = 5
+            ws = 5
              
-             output = []
+            output = []
              
-             for id, event in enumerate(X):
+            for id, event in enumerate(X):
                 if id < len(X)-5:
                     input_seq = X[id:id+ws]
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
