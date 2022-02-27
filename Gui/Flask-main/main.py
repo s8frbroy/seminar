@@ -116,8 +116,9 @@ def preprocess():
             ws = 5
 
             output = []
-
+            print(f"len X: {len(X)}")
             for id, event in enumerate(X):
+                
                 if id < len(X) - 5:
                     Y = X[id:id + ws]
 
@@ -193,9 +194,12 @@ def graph():
     
     print(len(events))
     events = events.tolist()
+    print(events)
     if model_type == "SPEED":
-        for i in events:
+        for i in range(len(events)):
+            print(f"{events[i]}")
             events[i] = get_num_from_alphabet(events[i])
+
     events.append(add.loc["sen"])
     print(len(events))
     print(events)
