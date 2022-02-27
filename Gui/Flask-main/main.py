@@ -28,106 +28,109 @@ app.config['UPLOAD_FOLDER'] = 'static/files'
 
 counter = 0
 
+
 ## Upload Form
 class UploadFileForm(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
     submit = SubmitField("Upload File")
 
+
 class Submit(FlaskForm):
     submit = SubmitField("Predict")
 
 
-
 @app.route('/', methods=['GET', "POST"])
-#@app.route('/home', methods=['GET', "POST"])
+# @app.route('/home', methods=['GET', "POST"])
 def home():
     form = UploadFileForm()
     datatype = ['Multi Int', 'Multi Float', 'HouseA', 'HouseB']
     model = ['LSTM', 'CNN', 'SPEED']
-    
+
     if form.validate_on_submit():
         global type
-        global model_type 
+        global model_type
         type_dat = request.form["datatype"]
         model_chosen = request.form["model"]
         model_type = model_chosen
         file = form.file.data  # First grab the file
         if type_dat == "HouseA":
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                "Aras.txt"))  # Then save the file
+                                   "Aras.txt"))  # Then save the file
             type = "HouseA"
         elif type_dat == "HouseB":
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                "Aras.txt"))  # Then save the file
+                                   "Aras.txt"))  # Then save the file
             type = "HouseB"
         elif type_dat == "Multi Int":
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                "Multi_int.csv"))  # Then save the file
+                                   "Multi_int.csv"))  # Then save the file
             type = "Multi"
         elif type_dat == "Multi Float":
             file.save(os.path.join(os.path.abspath(os.path.dirname(__file__)), app.config['UPLOAD_FOLDER'],
-                                "Multi_float.csv"))  # Then save the file
+                                   "Multi_float.csv"))  # Then save the file
             type = "Multi"
-        
 
-       
-        #return f"File has been uploaded data of {type_dat}"
+        # return f"File has been uploaded data of {type_dat}"
     preprocess()
-       
-    return render_template('index.html', form=form, datatype=datatype, model = model, section = True)
+
+    return render_template('index.html', form=form, datatype=datatype, model=model, section=True)
 
 
 @app.route("/predict")
 def pred():
-    print("",type)
-    print("",model_type)
+    print("", type)
+    print("", model_type)
     return render_template('predict.html')
+
 
 def select_dataset(type):
     if type == "HouseA":
-            df = preprocessing.process_data_Aras("static/files/Aras.txt",type)
-            print("",type)
-            print("",model_type)
+        df = preprocessing.process_data_Aras("static/files/Aras.txt", type)
+        print("", type)
+        print("", model_type)
     elif type == "HouseB":
-            df = preprocessing.process_data_Aras("static/files/Aras.txt",type)
-            print("",type)
-            print("",model_type)
+        df = preprocessing.process_data_Aras("static/files/Aras.txt", type)
+        print("", type)
+        print("", model_type)
     else:
-            df = preprocessing.preprocess_multi("static/files/Multi_float.csv", "static/files/Multi_int.csv")
-            print("",type)
-            print("",model_type)
-    
+        df = preprocessing.preprocess_multi("static/files/Multi_float.csv", "static/files/Multi_int.csv")
+        print("", type)
+        print("", model_type)
+
     return df
-    
+
+
 @app.route('/predict', methods=['GET', "POST"])
 def preprocess():
     if request.form.get('Predict') == 'Predict':
-        
+
         df = select_dataset(type)
         print(df.head())
 
-        if model_type == "SPEED":               
+        if model_type == "SPEED":
             model = predict.init_model_speed(type)
-             
+
             X, all_seq = predict.preprocessing_speed(df)
             X.to_csv('static/files/data.csv')
-             
+
             ws = 5
-             
+
             output = []
-             
+
             for id, event in enumerate(X):
-                if id < len(X)-5:
-                    input_seq = X[id:id+ws]
+                if id < len(X) - 5:
+                    Y = X[id:id + ws]
+
+                    input_seq = list(Y["event"])
                     print(input_seq)
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
-                    
+
                     output.append(prediction_with_prob)
-                    
-            out_df = pd.DataFrame (output, columns = ['sen', 'prob'])
+
+            out_df = pd.DataFrame(output, columns=['sen', 'prob'])
             out_df.to_csv('static/files/Output.csv')
 
-        else :
+        else:
 
             X = predict.preprocessing_2(df)
 
@@ -135,39 +138,37 @@ def preprocess():
                 print(X)
                 model_cnn = predict.init_model_cnn()
                 print(model_cnn)
-                out = predict.predict(model_cnn,X)
+                out = predict.predict(model_cnn, X)
                 print(out)
-                y_pred_sensor= []
-                y_pred_prob= []
-                for i in range(0,len(out)): 
+                y_pred_sensor = []
+                y_pred_prob = []
+                for i in range(0, len(out)):
                     y_pred_sensor.append(np.argmax(out[i]))
                     y_pred_prob.append(np.max(out[i]))
-                dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
-                df = pd.DataFrame(data = dic)
-                df.to_csv('static/files/Output.csv') 
+                dic = {"sen": y_pred_sensor, "prob": y_pred_prob}
+                df = pd.DataFrame(data=dic)
+                df.to_csv('static/files/Output.csv')
 
             else:
                 model_lstm = predict.init_model_lstm()
-                out = predict.predict(model_lstm,X)
+                out = predict.predict(model_lstm, X)
                 print(out)
-                y_pred_sensor= []
-                y_pred_prob= []
-                for i in range(0,len(out)): 
+                y_pred_sensor = []
+                y_pred_prob = []
+                for i in range(0, len(out)):
                     y_pred_sensor.append(np.argmax(out[i]))
                     y_pred_prob.append(np.max(out[i]))
-                dic = {"sen": y_pred_sensor, "prob":y_pred_prob}
-                df = pd.DataFrame(data = dic)
+                dic = {"sen": y_pred_sensor, "prob": y_pred_prob}
+                df = pd.DataFrame(data=dic)
                 df.to_csv('static/files/Output.csv')
-                 
+
         return redirect(url_for("graph"))
-    
 
 
 @app.route("/graph", methods=['GET', 'POST'])
 def graph():
-
     global counter
-    eps = 20 
+    eps = 20
     if model_type == "SPEED":
         eps = 5
     border = counter + eps
@@ -180,17 +181,17 @@ def graph():
     original = original_sen = get_original(pred_sensor)
     ## values for the plot
     print(add.loc["sen"])
-    events = data.loc[counter:border-1, "event"]
+    events = data.loc[counter:border - 1, "event"]
     print(len(events))
     events = events.tolist()
     events.append(add.loc["sen"])
     print(len(events))
     print(events)
-    label = [str(x) for x in range(1,eps+1)]
+    label = [str(x) for x in range(1, eps + 1)]
     label.append("Pred")
 
     if request.method == 'POST':
-    
+
         if request.form.get('action1') == 'Backward':
             if counter == 0:
                 print("predict")
@@ -198,20 +199,21 @@ def graph():
             else:
                 print("hello")
                 counter += -1
-                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100, original = original_sen )
+                return render_template('graph.html', title='Visualization', max=24, labels=label, values=events,
+                                       prob=prob * 100, original=original_sen)
 
-            
-        if  request.form.get('action2') == 'Forward':
+        if request.form.get('action2') == 'Forward':
             counter += 1
-            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events, prob=prob*100, original = original_sen)
-
-
+            return render_template('graph.html', title='Visualization', max=24, labels=label, values=events,
+                                   prob=prob * 100, original=original_sen)
 
     labels = label
 
     values = events
-    
-    return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values, prob=prob*100, original = original_sen)
+
+    return render_template('graph.html', title='Visualization', max=24, labels=labels, values=values, prob=prob * 100,
+                           original=original_sen)
+
 
 def get_original(sensor):
     if sensor == 0 or sensor == "a":
@@ -274,7 +276,6 @@ def get_original(sensor):
         return "kitchen motin off"
     elif sensor == 23 or sensor == "L":
         return "kitchen motion on"
-    
 
 
 if __name__ == '__main__':
