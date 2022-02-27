@@ -104,6 +104,7 @@ def preprocess():
     if request.form.get('Predict') == 'Predict':
         
         df = select_dataset(type)
+        print(df.head())
 
         if model_type == "SPEED":                
              model_speed = predict.init_model_speed(type)
@@ -112,6 +113,7 @@ def preprocess():
              prediction, out_prob = predict.speed_predict(model[0], input_seq, model[1])
 
         else :
+
             X = predict.preprocessing_2(df)
 
             if model_type == "CNN":
