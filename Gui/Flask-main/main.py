@@ -124,6 +124,7 @@ def preprocess():
                     input_seq = list(Y["event"])
                     print(input_seq)
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
+                    prediction_with_prob = get_num_from_alphabet(prediction_with_prob[0]), prediction_with_prob[1]
 
                     output.append(prediction_with_prob)
 
@@ -276,6 +277,56 @@ def get_original(sensor):
         return "kitchen motin off"
     elif sensor == 23 or sensor == "L":
         return "kitchen motion on"
+
+def get_num_from_alphabet(sensor):
+    if sensor == "a":
+        return 0
+    elif sensor == "A":
+        return 1
+    elif sensor == "b":
+        return 2
+    elif sensor == "B":
+        return 3
+    elif sensor == "c":
+        return 4
+    elif sensor == "C":
+        return 5
+    elif sensor == "d":
+        return 6
+    elif sensor == "D":
+        return 7
+    elif sensor == "e":
+        return 8
+    elif sensor == "E":
+        return 9
+    elif sensor == "f":
+        return 10
+    elif sensor == "F":
+        return 11
+    elif sensor == "g":
+        return 12
+    elif sensor == "G":
+        return 13
+    elif sensor == "h":
+        return 14
+    elif sensor == "H":
+        return 15
+    elif sensor == "i":
+        return 16
+    elif sensor == "I":
+        return 17
+    elif sensor == "j":
+        return 18
+    elif sensor == "J":
+        return 19
+    elif sensor == "k":
+        return 20
+    elif sensor == "K":
+        return 21
+    elif sensor == "l":
+        return 22
+    elif sensor == "L":
+        return 23
 
 
 if __name__ == '__main__':

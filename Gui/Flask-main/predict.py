@@ -227,7 +227,7 @@ def speed_predict_from_tree(the_tree, check_seq, count_of_all_nodes):
             predict_prob.append([act, 0])
 
     prediction = max(predict_prob, key=lambda x: x[1])
-    return prediction, predict_prob
+    return [prediction, predict_prob]
 
 
 def prob_of_target(check_seq, target, the_tree, total_count_of_nodes, count_of_all_nodes):
