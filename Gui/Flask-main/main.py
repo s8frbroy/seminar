@@ -117,15 +117,20 @@ def preprocess():
 
             output = []
             print(f"len X: {len(X)}")
-            for id, event in enumerate(X):
+
+            for id in range(len(X)):
+                print(f"id: {id}")
                 
+                print(f"statement: {id}")
+
                 if id < len(X) - 5:
-                    Y = X[id:id + ws]
+                    Y = X[id: (id + ws)]
 
                     input_seq = list(Y["event"])
-                    print(input_seq)
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
+                    
                     prediction_with_prob = get_num_from_alphabet(prediction_with_prob[0]), prediction_with_prob[1]
+
                     p = prediction_with_prob[1]
                     maximum = max(p, key=lambda x: x[1])
                     maximum[0] = get_num_from_alphabet(maximum[0])
