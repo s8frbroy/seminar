@@ -119,6 +119,7 @@ def preprocess():
             for id, event in enumerate(X):
                 if id < len(X)-5:
                     input_seq = X[id:id+ws]
+                    print(input_seq)
                     prediction_with_prob = predict.speed_predict(model[0], input_seq, model[1])
                     
                     output.append(prediction_with_prob)

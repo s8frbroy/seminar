@@ -177,6 +177,7 @@ def count_nodes(node_dict, node):
     caps = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"]   # turning on
     lows = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l"]   # turning off
 
+    global all_actions
     all_actions = caps + lows
     if node in caps or node in lows:
         if node in node_dict:
@@ -195,8 +196,8 @@ def tree_search(tree, parent_seq, node_char, node_count):
                     check_layer = check_layer[-1]
                 else:
                 #print("append to: ", item, "check layer: ", check_layer, "TRIGGERED HERE")     # next layer would be the most shallow subtree layer
-                item.append([node_char, node_count])
-  return tree
+                    item.append([node_char, node_count])
+    return tree
     
 def speed_predict(model, input, count_of_all_nodes):
     stat_tree = model
